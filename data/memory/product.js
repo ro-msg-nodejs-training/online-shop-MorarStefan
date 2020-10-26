@@ -1,5 +1,4 @@
-let products = {
-    1: {
+let products = [{
         id: 1,
         name: 'iPhone X',
         description: 'Created by Apple',
@@ -9,7 +8,7 @@ let products = {
         supplier: 'Emag',
         imageUrl: 'url'
     },
-    2: {
+    {
         id: 2,
         name: 'Huawei P30 Pro',
         description: 'Created by Huawei',
@@ -19,6 +18,6 @@ let products = {
         supplier: 'Emag',
         imageUrl: 'url'
     },
-};
+];
 
 module.exports = products;
