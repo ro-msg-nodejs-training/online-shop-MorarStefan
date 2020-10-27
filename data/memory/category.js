@@ -10,4 +10,8 @@ let categories = [{
     },
 ];
 
-module.exports = categories;
+async function retrieve() {
+    return Promise.resolve(categories);
+}
+
+module.exports = retrieve();

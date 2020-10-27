@@ -7,10 +7,10 @@ app.use(express.urlencoded({ extended: true }));
 const routes = require('./routes');
 
 const model = require('./data/memory');
-const categories = model.categories;
-const products = model.products;
 
-app.use((req, res, next) => {
+app.use(async(req, res, next) => {
+    const categories = await model.categories;
+    const products = await model.products;
     req.context = {
         products,
         categories,

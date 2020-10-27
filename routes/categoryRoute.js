@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
 router.get('/:categoryId/products', (req, res) => {
     var category = findCategory(Object.values(req.context.categories), req.params.categoryId);
     if (category !== null) {
-        var productsInCategory = []
+        var productsInCategory = [];
         Object.values(req.context.products).forEach(element => {
             if (element.categoryId === parseInt(req.params.categoryId)) {
                 productsInCategory.push(element);

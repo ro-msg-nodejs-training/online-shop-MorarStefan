@@ -20,4 +20,8 @@ let products = [{
     },
 ];
 
-module.exports = products;
+async function retrieve() {
+    return Promise.resolve(products);
+}
+
+module.exports = retrieve();

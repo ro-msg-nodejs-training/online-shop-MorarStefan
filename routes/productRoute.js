@@ -13,8 +13,7 @@ router.get('/:productId', (req, res) => {
 });
 
 router.delete('/:productId', (req, res) => {
-    var products = Object.values(req.context.products);
-    var product = findProduct(products, req.params.productId);
+    var product = findProduct(Object.values(req.context.products), req.params.productId);
     if (product !== null) {
         req.context.products.splice(req.context.products.indexOf(product), 1);
         return res.status(200).json(product);
