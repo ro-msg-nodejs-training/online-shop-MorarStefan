@@ -1,31 +1,30 @@
 const router = require('express').Router();
 
-router.get('/', (req, res) => {
-    return res.status(200).send(Object.values(req.context.categories));
-});
+const CategoryModel = require('../models/category');
+const ProductModel = require('../models/product');
 
-router.get('/:categoryId/products', (req, res) => {
-    var category = findCategory(Object.values(req.context.categories), req.params.categoryId);
-    if (category !== null) {
-        var productsInCategory = [];
-        Object.values(req.context.products).forEach(element => {
-            if (element.categoryId === parseInt(req.params.categoryId)) {
-                productsInCategory.push(element);
-            }
-        });
-        return res.status(200).send(productsInCategory);
+router.get('/', async(req, res) => {
+    try {
+        const categories = await CategoryModel.find();
+        res.status(200).json(categories);
+    } catch (err) {
+        res.status(400).json({ message: err });
     }
-    res.status(404).send('Category with ID: ' + req.params.categoryId + ' not found.');
 });
 
-function findCategory(categories, categoryId) {
-    var category = null;
-    categories.forEach(element => {
-        if (element.id === parseInt(categoryId)) {
-            category = element;
+router.get('/:categoryId/products', async(req, res) => {
+    try {
+        const category = await CategoryModel.findById(req.params.categoryId);
+        if (category !== null) {
+            const products = await ProductModel.find({ categoryId: req.params.categoryId });
+            res.status(200).json(products);
+        } else {
+            res.status(400).json({ message: 'Category with ID: ' + req.params.categoryId + ' not found.' });
         }
-    });
-    return category;
-}
+
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
 
 module.exports = router;
