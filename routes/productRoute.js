@@ -2,10 +2,13 @@ const router = require('express').Router();
 
 const ProductModel = require('../models/product');
 
+const productDTO = require('../dtos/productDTO');
+
 router.get('/', async(req, res) => {
     try {
         const products = await ProductModel.find();
-        res.status(200).json(products);
+        const productDTOs = await productDTO.modelsToDTOs(products);
+        res.status(200).json(productDTOs);
     } catch (err) {
         res.status(400).json({ message: err });
     }
@@ -15,7 +18,8 @@ router.get('/:productId', async(req, res) => {
     try {
         const product = await ProductModel.findById(req.params.productId);
         if (product !== null) {
-            res.status(200).json(product);
+            const returnedProductDTO = await productDTO.modelToDTO(product);
+            res.status(200).json(returnedProductDTO);
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.params.productId + ' not found.' });
         }
@@ -28,7 +32,8 @@ router.delete('/:productId', async(req, res) => {
     try {
         const product = await ProductModel.findOneAndDelete({ _id: req.params.productId });
         if (product !== null) {
-            res.status(200).json(product);
+            const returnedProductDTO = await productDTO.modelToDTO(product);
+            res.status(200).json(returnedProductDTO);
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.params.productId + ' not found.' });
         }
@@ -49,7 +54,8 @@ router.post('/', async(req, res) => {
     });
     try {
         const savedProduct = await product.save();
-        res.status(201).json(savedProduct);
+        const returnedProductDTO = await productDTO.modelToDTO(savedProduct);
+        res.status(201).json(returnedProductDTO);
     } catch (err) {
         res.status(400).json({ message: err });
     }
@@ -69,7 +75,8 @@ router.put('/', async(req, res) => {
             }
         }, { new: true });
         if (updatedProduct !== null) {
-            res.status(200).json(updatedProduct);
+            const returnedProductDTO = await productDTO.modelToDTO(updatedProduct);
+            res.status(200).json(returnedProductDTO);
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.body._id + ' not found.' });
         }
