@@ -4,6 +4,9 @@ const ProductModel = require('../models/product');
 
 const productDTO = require('../dtos/productDTO');
 
+const fs = require('fs');
+const upload = require('../imageUploader');
+
 router.get('/', async(req, res) => {
     try {
         const products = await ProductModel.find();
@@ -32,6 +35,12 @@ router.delete('/:productId', async(req, res) => {
     try {
         const product = await ProductModel.findOneAndDelete({ _id: req.params.productId });
         if (product !== null) {
+            try {
+                await fs.promises.unlink(product.imageUrl);
+            } catch (err) {
+                // The old URL does not point to a image in the file system.
+            }
+
             const returnedProductDTO = await productDTO.modelToDTO(product);
             res.status(200).json(returnedProductDTO);
         } else {
@@ -80,6 +89,93 @@ router.put('/', async(req, res) => {
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.body._id + ' not found.' });
         }
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+router.post('/:productId/images', upload.single('productImage'), async(req, res) => {
+    try {
+        const product = await ProductModel.findById(req.params.productId);
+        if (product !== null) {
+            const updatedProduct = await ProductModel.findOneAndUpdate({ _id: product._id }, { $set: { imageUrl: req.file.path } }, { new: true });
+
+            try {
+                await fs.promises.unlink(product.imageUrl);
+            } catch (err) {
+                // The old URL does not point to a image in the file system.
+            }
+
+            const returnedProductDTO = await productDTO.modelToDTO(updatedProduct);
+            res.status(200).json(returnedProductDTO);
+        } else {
+            res.status(400).json({ message: 'Product with ID: ' + req.body._id + ' not found.' });
+        }
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+router.delete('/:productId/images', async(req, res) => {
+    try {
+        const product = await ProductModel.findById(req.params.productId);
+        if (product !== null) {
+            const updatedProduct = await ProductModel.findOneAndUpdate({ _id: product._id }, { $set: { imageUrl: "" } }, { new: true });
+
+            try {
+                await fs.promises.unlink(product.imageUrl);
+            } catch (err) {
+                // The old URL does not point to a image in the file system.
+            }
+
+            const returnedProductDTO = await productDTO.modelToDTO(updatedProduct);
+            res.status(200).json(returnedProductDTO);
+        } else {
+            res.status(400).json({ message: 'Product with ID: ' + req.body._id + ' not found.' });
+        }
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+router.get('/:productId/images', async(req, res) => {
+    try {
+        const product = await ProductModel.findById(req.params.productId);
+        if (product !== null) {
+            try {
+                const stat = await fs.promises.lstat(product.imageUrl);
+                if (stat.isFile()) {
+                    const readableStream = fs.createReadStream(product.imageUrl);
+                    readableStream.on('open', function() {
+                        readableStream.pipe(res);
+                    });
+                    readableStream.on('error', function(err) {
+                        res.end(err);
+                    });
+                } else {
+                    res.status(400).json({ message: 'URL: ' + product.imageUrl + ' is not a file.' });
+                }
+            } catch (err) {
+                res.status(400).json({ message: 'File with URL: ' + product.imageUrl + ' not found.' });
+            }
+        } else {
+            res.status(400).json({ message: 'Product with ID: ' + req.body._id + ' not found.' });
+        }
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+router.get('/images/*', async(req, res) => {
+    try {
+        const imageUrls = [];
+        const products = await ProductModel.find();
+        for (const product of products) {
+            imageUrls.push({
+                imageUrl: product.imageUrl
+            });
+        }
+        res.status(200).json(imageUrls);
     } catch (err) {
         res.status(400).json({ message: err });
     }
