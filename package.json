@@ -20,6 +20,7 @@
     "homepage": "https://github.com/ro-msg-nodejs-training/online-shop-MorarStefan#readme",
     "dependencies": {
         "axios": "^0.20.0",
+        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "fs": "0.0.1-security",
         "lodash": "^4.17.20",
