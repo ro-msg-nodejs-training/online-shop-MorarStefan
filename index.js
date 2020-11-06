@@ -14,6 +14,7 @@ app.use('/categories', routes.categoryRoute);
 app.use('/products', routes.productRoute);
 app.use('/suppliers', routes.supplierRoute);
 app.use('/orders', routes.orderRoute);
+app.use('/stocks', routes.stockRoute);
 
 app.listen(3000, () =>
     console.log('Listening on port 3000!'),

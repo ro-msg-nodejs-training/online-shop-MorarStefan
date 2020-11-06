@@ -1,11 +1,13 @@
-const categoryRoute = require('./categoryRoute');
-const productRoute = require('./productRoute');
-const supplierRoute = require('./supplierRoute');
-const orderRoute = require('./orderRoute');
+const categoryRoute = require('./category-route');
+const productRoute = require('./product-route');
+const supplierRoute = require('./supplier-route');
+const orderRoute = require('./order-route');
+const stockRoute = require('./stock-route');
 
 module.exports = {
     categoryRoute,
     productRoute,
     supplierRoute,
-    orderRoute
+    orderRoute,
+    stockRoute
 }

@@ -1,16 +1,18 @@
 const router = require('express').Router();
 
 const OrderModel = require('../models/order');
-const OrderDetailModel = require('../models/orderDetail');
+const OrderDetailModel = require('../models/order-detail');
 const StockModel = require('../models/stock');
 
-const closestLocationStrategy = require('../strategies/closestLocationStrategy');
-const mostAbundantStrategy = require('../strategies/mostAbundantStrategy');
+const closestLocationStrategy = require('../strategies/closest-location-strategy');
+const mostAbundantStrategy = require('../strategies/most-abundant-strategy');
 
-const orderDTO = require('../dtos/orderDTO');
+const orderDTO = require('../dtos/order-dto');
 
 router.post('/', async(req, res) => {
     let orderProcessing;
+    const products = req.body.products.map(a => ({...a }));
+
     try {
         if (process.env.STRATEGY === 'CLOSEST') {
             orderProcessing = await closestLocationStrategy(req.body);
@@ -26,7 +28,7 @@ router.post('/', async(req, res) => {
         // set the first location as the "shippedFrom" location
         const createdOrder = await createOrder(req.body, orderProcessing[0].locationId);
 
-        createOrderDetails(createdOrder._id, orderProcessing);
+        createOrderDetails(createdOrder._id, products);
 
         const returnedOrderDTO = await orderDTO.modelToDTO(createdOrder);
         res.status(200).json(returnedOrderDTO);
@@ -66,14 +68,14 @@ async function createOrder(order, locationId) {
     return savedOrder;
 }
 
-async function createOrderDetails(orderId, orderProcessing) {
-    for (const orderEntry of orderProcessing) {
+async function createOrderDetails(orderId, products) {
+    for (const product of products) {
         const orderDetail = new OrderDetailModel({
             _id: {
                 orderId: orderId,
-                productId: orderEntry.productId
+                productId: product.productId
             },
-            quantity: orderEntry.quantity
+            quantity: product.quantity
         });
 
         await orderDetail.save();

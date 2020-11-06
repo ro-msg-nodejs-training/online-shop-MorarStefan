@@ -2,10 +2,10 @@ const router = require('express').Router();
 
 const ProductModel = require('../models/product');
 
-const productDTO = require('../dtos/productDTO');
+const productDTO = require('../dtos/product-dto');
 
 const fs = require('fs');
-const upload = require('../imageUploader');
+const upload = require('../image-uploader');
 
 router.get('/', async(req, res) => {
     try {

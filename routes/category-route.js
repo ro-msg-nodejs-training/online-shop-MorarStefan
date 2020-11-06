@@ -3,7 +3,7 @@ const router = require('express').Router();
 const CategoryModel = require('../models/category');
 const ProductModel = require('../models/product');
 
-const productDTO = require('../dtos/productDTO');
+const productDTO = require('../dtos/product-dto');
 
 router.get('/', async(req, res) => {
     try {
