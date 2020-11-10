@@ -4,21 +4,14 @@ const OrderModel = require('../models/order');
 const OrderDetailModel = require('../models/order-detail');
 const StockModel = require('../models/stock');
 
-const closestLocationStrategy = require('../strategies/closest-location-strategy');
-const mostAbundantStrategy = require('../strategies/most-abundant-strategy');
+const strategy = require('../strategies/strategy');
 
 const orderDTO = require('../dtos/order-dto');
 
 router.post('/', async(req, res) => {
-    let orderProcessing;
-    const products = req.body.products.map(a => ({...a }));
-    
     try {
-        if (process.env.STRATEGY === 'CLOSEST') {
-            orderProcessing = await closestLocationStrategy(req.body);
-        } else {
-            orderProcessing = await mostAbundantStrategy(req.body);
-        }
+        const products = req.body.products.map(a => ({...a }));
+        const orderProcessing = await strategy(req.body);
 
         if (orderProcessing === null) {
             throw "Could not find all needed products to complete the order.";
