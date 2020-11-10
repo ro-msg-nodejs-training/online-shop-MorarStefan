@@ -31,7 +31,7 @@ async function getLocationsOrderedByDistance(deliveryAddressId) {
         addresses.push(address.fullAddress);
     }
 
-    const mapQuestResult = await axios.post('http://www.mapquestapi.com/directions/v2/routematrix?key=SGC1NimYjkuPisz5FFqNdm1B4eUGRRRJ', {
+    const mapQuestResult = await axios.post('http://www.mapquestapi.com/directions/v2/routematrix?key=' + process.env.API_KEY, {
         "locations": addresses
     });
     mapQuestResult.data.distance.shift();
