@@ -1,6 +1,6 @@
-let mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-let addressSchema = new mongoose.Schema({
+const addressSchema = new mongoose.Schema({
     country: {
         type: String,
         required: true

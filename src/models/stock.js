@@ -1,15 +1,15 @@
-let mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-let orderDetailSchema = new mongoose.Schema({
+const stockSchema = new mongoose.Schema({
     _id: {
-        orderId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Order',
-            required: true
-        },
         productId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Product',
+            required: true
+        },
+        locationId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Location',
             required: true
         }
     },
@@ -19,4 +19,4 @@ let orderDetailSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('OrderDetail', orderDetailSchema)
+module.exports = mongoose.model('Stock', stockSchema)

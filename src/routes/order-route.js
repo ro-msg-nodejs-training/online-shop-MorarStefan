@@ -21,7 +21,7 @@ router.post('/', async(req, res) => {
         }
 
         if (orderProcessing === null) {
-            throw "Cound not find all needed products to complete the order.";
+            throw "Could not find all needed products to complete the order.";
         }
         decreaseStock(orderProcessing);
 

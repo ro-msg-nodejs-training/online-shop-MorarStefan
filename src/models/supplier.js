@@ -1,6 +1,6 @@
-let mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-let supplierSchema = new mongoose.Schema({
+const supplierSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,

@@ -1,15 +1,16 @@
 const multer = require('multer');
 
 const imageStorage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function(_req, _file, cb) {
         cb(null, './tmp/');
     },
-    filename: function(req, file, cb) {
-        cb(null, Date.now() + file.originalname);
+    filename: function(_req, file, cb) {
+        cb(null, Date.now() + file.originalname); 
+        // "Multer.File.originalname" is a property that returns the name of the file on the uploader's computer
     }
 });
 
-const imageFilter = (req, file, cb) => {
+const imageFilter = (_req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {

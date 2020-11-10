@@ -1,6 +1,6 @@
-let mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-let orderSchema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema({
     shippedFrom: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Location'

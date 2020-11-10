@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const SupplierModel = require('../models/supplier');
 
-router.get('/', async(req, res) => {
+router.get('/', async(_req, res) => {
     try {
         const suppliers = await SupplierModel.find();
         res.status(200).json(suppliers);

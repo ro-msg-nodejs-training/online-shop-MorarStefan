@@ -7,7 +7,7 @@ const productDTO = require('../dtos/product-dto');
 const fs = require('fs');
 const upload = require('../image-uploader');
 
-router.get('/', async(req, res) => {
+router.get('/', async(_req, res) => {
     try {
         const products = await ProductModel.find();
         const productDTOs = await productDTO.modelsToDTOs(products);
@@ -166,7 +166,7 @@ router.get('/:productId/images', async(req, res) => {
     }
 });
 
-router.get('/images/*', async(req, res) => {
+router.get('/images/*', async(_req, res) => {
     try {
         const imageUrls = [];
         const products = await ProductModel.find();

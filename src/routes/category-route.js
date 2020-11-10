@@ -5,7 +5,7 @@ const ProductModel = require('../models/product');
 
 const productDTO = require('../dtos/product-dto');
 
-router.get('/', async(req, res) => {
+router.get('/', async(_req, res) => {
     try {
         const categories = await CategoryModel.find();
         res.status(200).json(categories);
