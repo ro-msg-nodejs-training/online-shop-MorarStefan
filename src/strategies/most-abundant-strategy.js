@@ -1,11 +1,11 @@
 const StockModel = require('../models/stock');
 
 const applyStrategy = async function(order) {
-    let products = order.products;
-    let orderProcessing = [];
-
+    const products = order.products;
+    const orderProcessing = [];
+    
     for (const product of products) {
-        let stockEntries = await StockModel.find({ "_id.productId": product.productId });
+        const stockEntries = await StockModel.find({ "_id.productId": product.productId });
         stockEntries.sort(function(a, b) {
             return b.quantity - a.quantity;
         });

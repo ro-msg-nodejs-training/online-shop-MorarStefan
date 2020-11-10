@@ -6,8 +6,8 @@ const StockModel = require('../models/stock');
 
 const applyStrategy = async function(order) {
     const locationsByDistance = await getLocationsOrderedByDistance(order.deliveryAddressId);
-
-    let [products, orderProcessing] = await processOrder(locationsByDistance, order.products);
+    
+    const [products, orderProcessing] = await processOrder(locationsByDistance, order.products);
 
     for (const product of products) {
         if (product.quantity !== 0) {
@@ -54,7 +54,7 @@ async function getLocationsOrderedByDistance(deliveryAddressId) {
 }
 
 async function processOrder(locationsByDistance, products) {
-    let orderProcessing = [];
+    const orderProcessing = [];
 
     for (const location of locationsByDistance) {
         for (const product of products) {

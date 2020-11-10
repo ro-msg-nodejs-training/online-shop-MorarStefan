@@ -12,7 +12,7 @@ const orderDTO = require('../dtos/order-dto');
 router.post('/', async(req, res) => {
     let orderProcessing;
     const products = req.body.products.map(a => ({...a }));
-
+    
     try {
         if (process.env.STRATEGY === 'CLOSEST') {
             orderProcessing = await closestLocationStrategy(req.body);
