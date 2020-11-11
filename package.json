@@ -1,0 +1,36 @@
+{
+    "name": "online-shop-morarstefan",
+    "version": "1.0.0",
+    "description": "Application that deals with the management and daily functioning of a small online shop",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node src/index.js",
+        "start:debug": "node --inspect-brk src/index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ro-msg-nodejs-training/online-shop-MorarStefan.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ro-msg-nodejs-training/online-shop-MorarStefan/issues"
+    },
+    "homepage": "https://github.com/ro-msg-nodejs-training/online-shop-MorarStefan#readme",
+    "dependencies": {
+        "axios": "^0.20.0",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "fs": "0.0.1-security",
+        "joi": "^17.3.0",
+        "joi-oid": "^1.1.2",
+        "lodash": "^4.17.20",
+        "mongoose": "^5.10.9",
+        "multer": "^1.4.2",
+        "validator": "^13.1.17"
+    },
+    "devDependencies": {
+        "eslint": "^7.11.0"
+    }
+}
