@@ -3,16 +3,13 @@ const router = require('express').Router();
 const ProductModel = require('../models/product').model;
 const productValidation = require('../models/product').validate;
 
-const productDTO = require('../dtos/product-dto');
-
 const fs = require('fs');
 const upload = require('../image-uploader');
 
 router.get('/', async(_req, res) => {
     try {
         const products = await ProductModel.find();
-        const productDTOs = await productDTO.modelsToDTOs(products);
-        res.status(200).json(productDTOs);
+        res.status(200).json(products);
     } catch (err) {
         res.status(400).json({ message: err });
     }
@@ -22,8 +19,7 @@ router.get('/:productId', async(req, res) => {
     try {
         const product = await ProductModel.findById(req.params.productId);
         if (product !== null) {
-            const returnedProductDTO = await productDTO.modelToDTO(product);
-            res.status(200).json(returnedProductDTO);
+            res.status(200).json(product);
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.params.productId + ' not found.' });
         }
@@ -42,8 +38,7 @@ router.delete('/:productId', async(req, res) => {
                 // The old URL does not point to a image in the file system.
             }
 
-            const returnedProductDTO = await productDTO.modelToDTO(product);
-            res.status(200).json(returnedProductDTO);
+            res.status(200).json(product);
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.params.productId + ' not found.' });
         }
@@ -57,8 +52,7 @@ router.post('/', async(req, res) => {
         await productValidation(req.body);
         const product = new ProductModel(req.body);
         const savedProduct = await product.save();
-        const returnedProductDTO = await productDTO.modelToDTO(savedProduct);
-        res.status(201).json(returnedProductDTO);
+        res.status(201).json(savedProduct);
     } catch (err) {
         res.status(400).json({ message: err });
     }
@@ -71,8 +65,8 @@ router.put('/', async(req, res) => {
             description: req.body.description,
             price: req.body.price,
             weight: req.body.weight,
-            categoryId: req.body.categoryId,
-            supplierId: req.body.supplierId,
+            category: req.body.category,
+            supplier: req.body.supplier,
             imageUrl: req.body.imageUrl
         };
         await productValidation(productData);
@@ -82,14 +76,13 @@ router.put('/', async(req, res) => {
                 description: req.body.description,
                 price: req.body.price,
                 weight: req.body.weight,
-                categoryId: req.body.categoryId,
-                supplierId: req.body.supplierId,
+                category: req.body.category,
+                supplier: req.body.supplier,
                 imageUrl: req.body.imageUrl
             }
         }, { new: true });
         if (updatedProduct !== null) {
-            const returnedProductDTO = await productDTO.modelToDTO(updatedProduct);
-            res.status(200).json(returnedProductDTO);
+            res.status(200).json(updatedProduct);
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.body._id + ' not found.' });
         }
@@ -110,8 +103,7 @@ router.post('/:productId/images', upload.single('productImage'), async(req, res)
                 // The old URL does not point to a image in the file system.
             }
 
-            const returnedProductDTO = await productDTO.modelToDTO(updatedProduct);
-            res.status(200).json(returnedProductDTO);
+            res.status(200).json(updatedProduct);
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.body._id + ' not found.' });
         }
@@ -132,8 +124,7 @@ router.delete('/:productId/images', async(req, res) => {
                 // The old URL does not point to a image in the file system.
             }
 
-            const returnedProductDTO = await productDTO.modelToDTO(updatedProduct);
-            res.status(200).json(returnedProductDTO);
+            res.status(200).json(updatedProduct);
         } else {
             res.status(400).json({ message: 'Product with ID: ' + req.body._id + ' not found.' });
         }

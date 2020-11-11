@@ -3,8 +3,6 @@ const router = require('express').Router();
 const CategoryModel = require('../models/category').model;
 const ProductModel = require('../models/product').model;
 
-const productDTO = require('../dtos/product-dto');
-
 router.get('/', async(_req, res) => {
     try {
         const categories = await CategoryModel.find();
@@ -18,9 +16,8 @@ router.get('/:categoryId/products', async(req, res) => {
     try {
         const category = await CategoryModel.findById(req.params.categoryId);
         if (category !== null) {
-            const products = await ProductModel.find({ categoryId: req.params.categoryId });
-            const productDTOs = await productDTO.modelsToDTOs(products);
-            res.status(200).json(productDTOs);
+            const products = await ProductModel.find({ "category.name": category.name });
+            res.status(200).json(products);
         } else {
             res.status(400).json({ message: 'Category with ID: ' + req.params.categoryId + ' not found.' });
         }

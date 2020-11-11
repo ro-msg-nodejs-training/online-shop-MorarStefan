@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Joi = require('joi')
-const JoiOid = require('joi-oid')
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -17,31 +16,43 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    categoryId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
+    category: {
+        name: {
+            type: String,
+            required: true
+        },
+        description: String
     },
-    supplierId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Supplier',
-        required: true
+    supplier: {
+        name: {
+            type: String,
+            required: true
+        }
     },
     imageUrl: String
 })
 
 async function validateProduct(product) {
-    const schema = Joi.object({
+    const supplierSchema = Joi.object({
+        name: Joi.string().min(2).max(30).required()
+    })
+
+    const categorySchema = Joi.object({
+        name: Joi.string().min(2).max(30).required(),
+        description: Joi.string().min(0).max(255)
+    })
+
+    const productSchema = Joi.object({
         name: Joi.string().min(2).max(50).required(),
         description: Joi.string().min(0).max(255),
         price: Joi.number().min(0).required(),
         weight: Joi.number().min(0).required(),
-        categoryId: JoiOid.objectId().required(),
-        supplierId: JoiOid.objectId().required(),
+        category: categorySchema,
+        supplier: supplierSchema,
         imageUrl: Joi.string().min(0).max(255)
     })
 
-    return await schema.validateAsync(product, { abortEarly: false })
+    return await productSchema.validateAsync(product, { abortEarly: false })
 }
 
 module.exports = {
