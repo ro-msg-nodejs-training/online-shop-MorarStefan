@@ -1,5 +1,5 @@
-const ProductModel = require('../models/product');
-const LocationModel = require('../models/location');
+const ProductModel = require('../models/product').model;
+const LocationModel = require('../models/location').model;
 
 const modelToDTO = async function(stock) {
     const product = await ProductModel.findById(stock._id.productId);

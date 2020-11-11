@@ -1,8 +1,10 @@
 const router = require('express').Router();
 
-const OrderModel = require('../models/order');
-const OrderDetailModel = require('../models/order-detail');
-const StockModel = require('../models/stock');
+const OrderModel = require('../models/order').model;
+const OrderDetailModel = require('../models/order-detail').model;
+const StockModel = require('../models/stock').model;
+
+const orderValidation = require('../models/order').validate;
 
 const strategy = require('../strategies/strategy');
 
@@ -10,6 +12,7 @@ const orderDTO = require('../dtos/order-dto');
 
 router.post('/', async(req, res) => {
     try {
+        await orderValidation(req.body);
         const products = req.body.products.map(a => ({...a }));
         const orderProcessing = await strategy(req.body);
 

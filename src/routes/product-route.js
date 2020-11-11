@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
-const ProductModel = require('../models/product');
+const ProductModel = require('../models/product').model;
+const productValidation = require('../models/product').validate;
 
 const productDTO = require('../dtos/product-dto');
 
@@ -52,16 +53,9 @@ router.delete('/:productId', async(req, res) => {
 });
 
 router.post('/', async(req, res) => {
-    const product = new ProductModel({
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-        weight: req.body.weight,
-        categoryId: req.body.categoryId,
-        supplierId: req.body.supplierId,
-        imageUrl: req.body.imageUrl
-    });
     try {
+        await productValidation(req.body);
+        const product = new ProductModel(req.body);
         const savedProduct = await product.save();
         const returnedProductDTO = await productDTO.modelToDTO(savedProduct);
         res.status(201).json(returnedProductDTO);
@@ -72,6 +66,16 @@ router.post('/', async(req, res) => {
 
 router.put('/', async(req, res) => {
     try {
+        const productData = {
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            weight: req.body.weight,
+            categoryId: req.body.categoryId,
+            supplierId: req.body.supplierId,
+            imageUrl: req.body.imageUrl
+        };
+        await productValidation(productData);
         const updatedProduct = await ProductModel.findOneAndUpdate({ _id: req.body._id }, {
             $set: {
                 name: req.body.name,

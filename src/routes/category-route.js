@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
-const CategoryModel = require('../models/category');
-const ProductModel = require('../models/product');
+const CategoryModel = require('../models/category').model;
+const ProductModel = require('../models/product').model;
 
 const productDTO = require('../dtos/product-dto');
 

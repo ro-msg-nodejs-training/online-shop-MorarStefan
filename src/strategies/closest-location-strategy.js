@@ -1,12 +1,12 @@
 const axios = require('axios');
 
-const LocationModel = require('../models/location');
-const AddressModel = require('../models/address');
-const StockModel = require('../models/stock');
+const LocationModel = require('../models/location').model;
+const AddressModel = require('../models/address').model;
+const StockModel = require('../models/stock').model;
 
 const applyStrategy = async function(order) {
     const locationsByDistance = await getLocationsOrderedByDistance(order.deliveryAddressId);
-    
+
     const [products, orderProcessing] = await processOrder(locationsByDistance, order.products);
 
     for (const product of products) {

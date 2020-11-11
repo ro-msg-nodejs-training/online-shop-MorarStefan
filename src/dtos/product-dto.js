@@ -1,5 +1,5 @@
-const CategoryModel = require('../models/category');
-const SupplierModel = require('../models/supplier');
+const CategoryModel = require('../models/category').model;
+const SupplierModel = require('../models/supplier').model;
 
 const modelToDTO = async function(product) {
     const category = await CategoryModel.findById(product.categoryId);

@@ -1,11 +1,13 @@
 const router = require('express').Router();
 
-const StockModel = require('../models/stock');
+const StockModel = require('../models/stock').model;
+const stockValidation = require('../models/stock').validate;
 
 const stockDTO = require('../dtos/stock-dto');
 
 router.post('/', async(req, res) => {
     try {
+        await stockValidation(req.body);
         const existingStock = await StockModel.findOne({ "_id.productId": req.body.productId, "_id.locationId": req.body.locationId });
 
         if (existingStock === null) {
@@ -31,6 +33,7 @@ router.post('/', async(req, res) => {
 
 router.put('/', async(req, res) => {
     try {
+        await stockValidation(req.body);
         const updatedStock = await StockModel.findOneAndUpdate({ "_id.productId": req.body.productId, "_id.locationId": req.body.locationId }, {
             $set: {
                 quantity: req.body.quantity

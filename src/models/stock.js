@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const Joi = require('joi')
+const JoiOid = require('joi-oid')
 
 const stockSchema = new mongoose.Schema({
     _id: {
@@ -19,4 +21,17 @@ const stockSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Stock', stockSchema)
+async function validateStock(stock) {
+    const schema = Joi.object({
+        productId: JoiOid.objectId().required(),
+        locationId: JoiOid.objectId().required(),
+        quantity: Joi.number().min(0).required()
+    })
+
+    return await schema.validateAsync(stock, { abortEarly: false })
+}
+
+module.exports = {
+    model: mongoose.model('Stock', stockSchema),
+    validate: validateStock
+}

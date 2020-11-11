@@ -1,6 +1,6 @@
-const LocationModel = require('../models/location');
-const CustomerModel = require('../models/customer');
-const AddressModel = require('../models/address');
+const LocationModel = require('../models/location').model;
+const CustomerModel = require('../models/customer').model;
+const AddressModel = require('../models/address').model;
 
 const modelToDTO = async function(order) {
     const shippedFrom = await LocationModel.findById(order.shippedFrom);

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
-const SupplierModel = require('../models/supplier');
+const SupplierModel = require('../models/supplier').model;
+const supplierValidation = require('../models/supplier').validate;
 
 router.get('/', async(_req, res) => {
     try {
@@ -12,10 +13,12 @@ router.get('/', async(_req, res) => {
 });
 
 router.post('/', async(req, res) => {
-    const supplier = new SupplierModel({
-        name: req.body.name
-    });
     try {
+        await supplierValidation(req.body);
+        const supplier = new SupplierModel({
+            name: req.body.name
+        });
+
         const savedSupplier = await supplier.save();
         res.status(201).json(savedSupplier);
     } catch (err) {

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const Joi = require('joi')
+const JoiOid = require('joi-oid')
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -28,4 +30,21 @@ const productSchema = new mongoose.Schema({
     imageUrl: String
 })
 
-module.exports = mongoose.model('Product', productSchema)
+async function validateProduct(product) {
+    const schema = Joi.object({
+        name: Joi.string().min(2).max(50).required(),
+        description: Joi.string().min(0).max(255),
+        price: Joi.number().min(0).required(),
+        weight: Joi.number().min(0).required(),
+        categoryId: JoiOid.objectId().required(),
+        supplierId: JoiOid.objectId().required(),
+        imageUrl: Joi.string().min(0).max(255)
+    })
+
+    return await schema.validateAsync(product, { abortEarly: false })
+}
+
+module.exports = {
+    model: mongoose.model('Product', productSchema),
+    validate: validateProduct
+}

@@ -23,4 +23,6 @@ addressSchema.virtual('fullAddress').get(function() {
     return this.city + ', ' + this.county + ', ' + this.country + ', ' + this.streetAddress
 })
 
-module.exports = mongoose.model('Address', addressSchema)
+module.exports = {
+    model: mongoose.model('Address', addressSchema)
+}
